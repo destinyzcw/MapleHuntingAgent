@@ -1,37 +1,31 @@
 # MapleStory rules and hunting context
 
-Context version: draft-0
+Context version: generic-hunting-v1
 
-Verification status: unverified template
+Status: user-provided game context; timing and visual calibration incomplete
 
 ## Objective
 
-To be supplied: hunting objective, map, and completion conditions.
+Milestone 1 stays on the current map, returns to its horizontal center band, and uses configured character actions when their usage strategies permit. Map identity is not required. Do not choose map changes. The center band, keys, priorities, capabilities, and natural-language usage are supplied by the active profile/configuration; do not assume the sample character's bindings for another profile.
 
-## Character and game edition
+## Character
 
-To be supplied: edition, class, level, and relevant skills.
+The sample is China MapleStory (CMS), Kanna. Character identity comes from the active profile, which takes precedence over examples in documentation. There is no separate attack/buff classification in the profile; all activation actions share bindings, priorities, and usage strategies.
 
-## Visible indicators
+## Visual state
 
-To be supplied: locations and interpretations of player, enemy, HP, MP, cooldown, and status indicators.
+MapleStory is a 2D scrolling game. The top-left minimap indicates character position; use its player marker rather than the scrolling main view's center. The bottom-right action HUD shows keys/cooldowns. Effect icons are in the bottom row of the top-right buff list.
 
-## Movement and combat mechanics
+The sample Q and D actions have cooldowns. E and W may be greyed out, which means unavailable. Exact icon locations, names, resource costs, and cooldown durations are not yet calibrated. Unknown readiness is not available.
 
-To be supplied: range, timing, platforms, movement restrictions, resource costs, and recovery rules.
+## Default strategy
 
-## Controls
+For the CMS Kanna sample, 1 runs when ready before E → W → Q → D. Numeric profile priorities are authoritative. F6 is a distinct maintenance action disabled until milestone 2; its schedule must not be applied to 1. Other profiles may have different keys, priorities, action counts, no effect-maintenance actions, or no teleport.
 
-To be supplied from the actual game settings. No assumed default key bindings.
+## Rune requirement
 
-## Valid action conditions
+A dark-purple/block notice indicates a rune must be activated or no experience is gained, according to the user. Finding it in the minimap, approaching underneath, and activation remain in [TODO.md](../docs/TODO.md). Pause normal hunting for manual activation; do not infer that a chosen input successfully activated it.
 
-To be supplied: when each action is executable and when it should be withheld.
+## Execution and evidence
 
-## Result verification
-
-To be supplied: expected effects, observation delay, and evidence for success/failure.
-
-## Stop conditions
-
-To be supplied: completion, unexpected dialogs, connection loss, death, and user interruption policy.
+Recheck focus, frame freshness, pending actions, and current prerequisites before bounded input. Track expected effects independently from dispatch. Use fresh observations to resume hunting after a rune pause and to re-center after manual movement. Exact viewport geometry, input timing, and remote delay must be measured from the real session.

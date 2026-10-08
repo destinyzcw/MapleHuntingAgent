@@ -7,6 +7,7 @@ dist/
 .DS_Store
 .env
 config/local.toml
+config/characters/local*.toml
 data/captures/*
 !data/captures/.gitkeep
 data/runs/*

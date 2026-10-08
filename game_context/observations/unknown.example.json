@@ -1,0 +1,15 @@
+{
+  "frame_id": "unknown-example-not-a-real-capture",
+  "captured_at": "2026-10-08T00:00:00+00:00",
+  "image_path": null,
+  "source_window_id": "unconfigured-example",
+  "viewport": {"x": 0, "y": 0, "width": 1, "height": 1},
+  "held_keys": [],
+  "facts": {
+    "control.gameplay_ready": null,
+    "remote.frame_fresh": null,
+    "minimap.player_x": null,
+    "map.changed": null,
+    "rune.required": null
+  }
+}

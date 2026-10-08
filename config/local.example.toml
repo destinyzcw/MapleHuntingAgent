@@ -20,7 +20,8 @@ max_options = 16                   # first implementation uses trained choice sl
 
 [context]
 rules_file = "game_context/rules.template.md"
-actions_file = "game_context/actions.example.json"
+session_file = "game_context/session.example.json"
+character_profile_file = "config/characters/default.toml"
 
 [scheduling]
 observation_interval_ms = 1000      # regular screenshot + decision cadence
@@ -34,3 +35,9 @@ enabled = true
 backend = "sqlite"
 database = "data/memory/learnings.sqlite3"
 # Scaffold settings only: no database is created until the memory adapter exists.
+
+[hunting]
+strategy = "single_map_center"
+map_change_enabled = false
+center_x = 0.5                     # horizontal center of the cropped minimap
+center_tolerance = 0.05            # provisional central 45%-55% band

@@ -1,6 +1,6 @@
 # Game context
 
-This directory will hold the game knowledge used to construct decisions. It currently contains templates, not verified MapleStory rules.
+This directory holds game context and input examples. The sample is China MapleStory (CMS), Kanna. Its controls are configured in one [action profile](../config/characters/README.md). Map name is optional; exact timing and UI geometry remain unverified.
 
 The model will receive relevant rules, the current objective, observed state, and only the actions currently available. Do not rely on general game knowledge for edition-specific mechanics.
 
@@ -23,6 +23,10 @@ The executor will support any configured keyboard input, not only the controls l
 ## Files
 
 - `rules.template.md`: human-readable, versioned context. Unknown facts stay unknown.
+- `actions.md`: unified action semantics, default sample, and links to editable profiles.
+- `hunting.md`: milestone-1 single-map center objective, minimap/HUD facts, attack priority, and deferred rune activation.
+- `session.example.json`: known UI hints and null calibration fields; character identity is overlaid from the active profile.
+- `observations/unknown.example.json`: deliberately incomplete input for CLI previews, not a real capture.
 - `actions.example.json`: action schema example. Only wait/stop definitions are present; no key bindings or combat actions exist yet.
 
 Screenshots belong in `data/captures/`, not in rule files. Link observations to their frame IDs when reviewing failures. Avoid including account details or credentials in committed examples.

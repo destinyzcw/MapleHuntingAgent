@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "incomplete_user_session_context",
+  "game": {
+    "name": "MapleStory",
+    "edition_region": null,
+    "character_class": null,
+    "map_identity_required": false
+  },
+  "objective": "Milestone 1: remain on the current map, stay near its horizontal center, and use configured attacks and buffs by priority.",
+  "ui_hints": {
+    "minimap": "top-left corner; locate player marker in the cropped minimap",
+    "skills": "bottom-right corner; E/W greyed-out means unavailable in the default profile",
+    "buffs": "bottom row of the top-right buff list",
+    "rune_notice": "dark-purple/block notice; pause for manual activation until the TODO is tested"
+  },
+  "calibration": {
+    "uu_window_identity": null,
+    "game_viewport_pixels": null,
+    "minimap_bounds": null,
+    "player_marker_appearance": null,
+    "skill_icon_bounds_by_id": null,
+    "buff_icon_bounds_by_id": null,
+    "rune_notice_example": null,
+    "input_to_visible_effect_ms": null
+  }
+}

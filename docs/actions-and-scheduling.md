@@ -1,10 +1,12 @@
 # Keyboard actions and scheduling
 
-Status: requirements and contracts only; no input or scheduler implementation yet.
+Status: keyboard action loading and candidate filtering are implemented; input dispatch and scheduling are not. The current profile is documented in [available actions](../game_context/actions.md).
 
 ## Any keyboard input, finite choices per decision
 
-The executor must support arbitrary configured physical keys, not a hardcoded list of MapleStory commands. The initial primitives are press/tap, bounded hold, release, simultaneous chord, and wait. An action may compose several primitives into an ordered sequence. Repeated actions reuse these primitives.
+The executor must support arbitrary configured physical keys, not a hardcoded list of MapleStory commands. The initial primitives are leased key-down, press/tap, bounded hold, release, simultaneous chord, and wait. An action may compose several primitives into an ordered sequence. Repeated actions reuse these primitives.
+
+`key_down.duration_ms` is a nonblocking key lease, not a sleep. `press`, `hold`, and `chord` release their inputs after the given duration; `release` takes zero duration. Before enabling live input, implement cancellation and lease expiry. The action loader rejects invalid operations, duplicate keys, and durations beyond configured bounds.
 
 Key identifiers and Mac-to-remote mapping will be defined during integration. Letter keys, arrows, modifiers, function keys, and other physical keys must be representable. The executor owns translation to the selected macOS input API and UU远程 forwarding behavior.
 

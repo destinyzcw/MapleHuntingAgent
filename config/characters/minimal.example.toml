@@ -1,0 +1,19 @@
+# Example character with one attack, no buffs, and no teleport.
+schema_version = 1
+id = "minimal"
+context_version = "minimal-controls-v1"
+
+[movement]
+bindings = { left = "left", right = "right", up = "up", down = "down" }
+lease_ms = 500
+
+[teleport]
+enabled = false
+
+[[actions]]
+id = "basic_attack"
+usage = "Use when its cooldown is ready."
+keys = ["x"]
+priority = 10
+availability = "observed"
+description = "Example attack on X; replace with this character's actual binding."

@@ -13,9 +13,9 @@ Build the scaffold, documentation, configuration, and interfaces first. Concrete
 
 ## Agent handoff
 
-1. Read the current-status table in `README.md` before implementing a feature. The current version is an inert scaffold, not a working gameplay agent.
+1. Read the current-status table in `README.md` before implementing a feature. The current version has an action catalog/filter, but no keyboard dispatch or gameplay loop.
 2. Read `docs/architecture.md`, `docs/actions-and-scheduling.md`, `docs/memory.md`, and `docs/minecraft-lessons.md` for accepted design decisions.
-3. Review `game_context/README.md` and `rules.template.md`. Game edition, character, hunting map, actual key bindings, and viewport geometry are not yet supplied.
+3. Read `config/characters/README.md` and the selected profile. All character activations are a single `[[actions]]` list with keys, numeric priority, and natural-language usage; no hardcoded attack/buff split. The sample is CMS Kanna with 1=0, E=10, W=20, Q=30, D=40. Q/D have cooldowns, E/W can grey out, F6 is disabled until milestone 2. Map name is not required.
 4. Continue with the capture/context milestone in `docs/development.md`; use real user-session frames for calibration. The README's Steam screenshot is illustrative only.
 5. Keep the README status and validation evidence current when a component becomes implemented. Do not label a defined interface, configuration field, or dependency installation as a working integration.
 
@@ -30,3 +30,8 @@ For dependency-free checks on this authoring workstation, compile source with Py
 - Keep capture, perception, objectives, action filtering, decisions, execution, validation, memory, and traces separate.
 - Use the Minecraft projects as architectural references. Read `docs/minecraft-lessons.md` for the inspected revisions and adaptation boundaries.
 - Do not invent game mechanics, key bindings, or successful validation evidence.
+- Milestone 1 is single-map centered hunting, with no map changes. Use the top-left minimap for position and bottom-right HUD for readiness. Read `game_context/hunting.md` before changing candidate rules.
+- The CMS Kanna sample prioritizes ready actions as 1, then E → W → Q → D. Q/D have cooldowns, greyed-out E/W are unavailable. All entries share the same action schema; their game purposes do not require separate classification.
+- The default profile implements that order via priority numbers. Other profiles may remap keys, omit teleport, or have any number of unified actions. Do not hardcode sample keys/priorities into the policy or JEV prompts.
+- Use `jev_inputs.py` for state/questions/candidates and explicit unknowns. Visual fact extraction and action selection are separate prepared stages; model execution remains unimplemented. Read `docs/jev-inputs.md` for known inputs and calibration gaps.
+- Rune activation is deferred in `docs/TODO.md`. A detected requirement pauses routine hunting for manual activation; do not implement or assume the interaction/puzzle without a session test.

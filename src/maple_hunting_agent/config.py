@@ -19,7 +19,8 @@ class AppConfig:
     runtime_revision: str
     max_options: int
     rules_file: Path
-    actions_file: Path
+    session_file: Path
+    character_profile_file: Path
     observation_interval_ms: int
     repeat_interval_ms: int
     max_repeat_observation_age_ms: int
@@ -28,6 +29,10 @@ class AppConfig:
     memory_enabled: bool
     memory_backend: str
     memory_database: Path
+    hunting_strategy: str
+    map_change_enabled: bool
+    center_x: float
+    center_tolerance: float
 
 
 def load_config(path: Path) -> AppConfig:
@@ -46,6 +51,7 @@ def load_config(path: Path) -> AppConfig:
     context = data["context"]
     scheduling = data["scheduling"]
     memory = data["memory"]
+    hunting = data["hunting"]
     if runtime["mode"] != "observe":
         raise ValueError("Only observe mode is available in this scaffold.")
     if decision["backend"] != "jev_mlx":
@@ -70,6 +76,13 @@ def load_config(path: Path) -> AppConfig:
         raise ValueError("Repeat interval must not exceed the observation interval.")
     if type(memory["enabled"]) is not bool or memory["backend"] != "sqlite":
         raise ValueError("Memory requires a boolean enabled field and the sqlite backend.")
+    if hunting["strategy"] != "single_map_center" or hunting["map_change_enabled"] is not False:
+        raise ValueError("Milestone 1 requires single_map_center with map changes disabled.")
+    for key in ("center_x", "center_tolerance"):
+        if type(hunting[key]) not in (int, float):
+            raise ValueError(f"hunting.{key} must be numeric.")
+    if not 0 <= hunting["center_x"] <= 1 or not 0 < hunting["center_tolerance"] <= 0.5:
+        raise ValueError("Center settings must be normalized minimap fractions.")
 
     def resolve(value: str) -> Path:
         item = Path(value).expanduser()
@@ -88,7 +101,8 @@ def load_config(path: Path) -> AppConfig:
         runtime_revision=decision["runtime_revision"],
         max_options=max_options,
         rules_file=resolve(context["rules_file"]),
-        actions_file=resolve(context["actions_file"]),
+        session_file=resolve(context["session_file"]),
+        character_profile_file=resolve(context["character_profile_file"]),
         observation_interval_ms=scheduling["observation_interval_ms"],
         repeat_interval_ms=scheduling["repeat_interval_ms"],
         max_repeat_observation_age_ms=scheduling["max_repeat_observation_age_ms"],
@@ -97,4 +111,8 @@ def load_config(path: Path) -> AppConfig:
         memory_enabled=memory["enabled"],
         memory_backend=memory["backend"],
         memory_database=resolve(memory["database"]),
+        hunting_strategy=hunting["strategy"],
+        map_change_enabled=hunting["map_change_enabled"],
+        center_x=float(hunting["center_x"]),
+        center_tolerance=float(hunting["center_tolerance"]),
     )

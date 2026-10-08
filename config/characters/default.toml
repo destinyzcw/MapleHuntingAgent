@@ -1,0 +1,78 @@
+# CMS Kanna sample supplied by the user. Lower priority numbers run first.
+schema_version = 1
+id = "cms_kanna"
+context_version = "cms-kanna-controls-v1"
+
+[character]
+edition_region = "China MapleStory (CMS)"
+character_class = "Kanna"
+
+[movement]
+bindings = { left = "left", right = "right", up = "up", down = "down" }
+lease_ms = 500
+
+[teleport]
+enabled = true
+keys = ["s"]
+directions = ["left", "right", "up", "down"]
+available_fact = "action.teleport.ready"
+press_ms = 80
+direction_lease_ms = 200
+settle_ms = 40
+
+[[actions]]
+id = "attack_e"
+usage = "Use when cooldown is ready and the icon is not greyed out."
+keys = ["e"]
+priority = 10
+availability = "observed"
+detect_greyed_out = true
+description = "Use E when ready; a greyed-out icon means unavailable."
+
+[[actions]]
+id = "attack_w"
+usage = "Use when cooldown is ready and the icon is not greyed out, after higher-priority ready actions."
+keys = ["w"]
+priority = 20
+availability = "observed"
+detect_greyed_out = true
+description = "Use W when ready after higher-priority skills."
+
+[[actions]]
+id = "attack_q"
+usage = "Use when its cooldown is ready, after higher-priority ready actions."
+keys = ["q"]
+priority = 30
+availability = "observed"
+description = "Use Q when its cooldown is ready; do not treat Q as always available."
+
+[[actions]]
+id = "attack_d"
+usage = "Use when its cooldown is ready, after higher-priority ready actions."
+keys = ["d"]
+priority = 40
+availability = "observed"
+description = "Use D when its cooldown is ready; do not treat D as always available."
+
+[[actions]]
+id = "buff_1"
+effect_present_fact = "action.buff_1.effect_present"
+effect_hint = "Find the specific 1-buff indicator in the bottom row of the top-right buff list."
+usage = "Use whenever ready before routine attacks; confirm its effect using the correct icon."
+keys = ["1"]
+priority = 0
+availability = "observed"
+strategy = "available"
+description = "Use the 1 buff whenever ready before the default attacks."
+
+# F6 is a different buff deferred to milestone 2. Disabled entries generate no action.
+[[actions]]
+id = "buff_f6"
+usage = "Milestone 2 only: refresh every 30 minutes or when its effect disappears."
+enabled = false
+keys = ["f6"]
+priority = 5
+availability = "always"
+strategy = "interval_or_missing"
+refresh_interval_ms = 1800000
+effect_hint = "Find the distinct F6 indicator in the bottom row of the top-right buff list."

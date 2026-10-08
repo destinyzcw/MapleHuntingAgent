@@ -12,6 +12,7 @@ FactValue: TypeAlias = str | int | float | bool | None
 
 
 class KeyboardOperation(StrEnum):
+    KEY_DOWN = "key_down"
     PRESS = "press"
     HOLD = "hold"
     RELEASE = "release"
@@ -42,10 +43,11 @@ class Viewport:
 class Observation:
     frame_id: str
     captured_at: datetime  # timezone-aware UTC; not proof of remote freshness
-    image_path: Path
+    image_path: Path | None
     viewport: Viewport
     source_window_id: str
     facts: dict[str, FactValue] = field(default_factory=dict)
+    held_keys: tuple[str, ...] = ()  # only keys owned by our executor
 
 
 @dataclass(frozen=True)
@@ -57,6 +59,19 @@ class ActionOption:
     max_duration_ms: int
     keyboard_steps: tuple[KeyboardStep, ...] = ()
     repeatable: bool = False
+    execution_kind: str = "keyboard"
+    required_facts: tuple[tuple[str, bool], ...] = ()
+    required_held_keys: tuple[str, ...] = ()
+    excluded_held_keys: tuple[str, ...] = ()
+    category: str = "custom"
+    priority: int = 100
+    direction: str | None = None
+    unavailable_facts: tuple[str, ...] = ()
+    refresh_interval_ms: int | None = None
+    effect_active_fact: str | None = None
+    elapsed_since_use_fact: str | None = None
+    usage_strategy: str = ""
+    effect_hint: str | None = None
 
 
 @dataclass(frozen=True)
