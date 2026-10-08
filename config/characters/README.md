@@ -15,7 +15,7 @@ Paths resolve from the repository root. Older local configs should replace `acti
 
 ## Included examples
 
-- [default.toml](default.toml): **China MapleStory (CMS), Kanna**, using 1=0, E=10, W=20, Q=30, D=40. Q/D have cooldowns; E/W can be greyed out. S teleport is enabled. The distinct F6 action is disabled until milestone 2.
+- [default.toml](default.toml): **China MapleStory (CMS), Kanna**, using 1=0, E=10, W=20, Q=30, D=40. The 1 action is periodic every 60 seconds, gated by readiness. Q/D have cooldowns; E/W can be greyed out. S teleport is enabled. The distinct F6 action is disabled until milestone 2.
 - [minimal.example.toml](minimal.example.toml): one X action and no teleport. It demonstrates a character without buffs or teleport; it is not a verified game setup.
 
 ## An action
@@ -51,7 +51,25 @@ Optional `ready_fact` and `greyed_out_fact` fields can connect an existing perce
 
 ## Usage strategies
 
-`strategy = "available"` (default) uses the action when its readiness guards and priority permit. To express a periodic effect-maintenance action:
+`strategy = "available"` (default) uses the action when its readiness guards and priority permit. For periodic actions:
+
+```toml
+[[actions]]
+id = "buff_1"
+keys = ["1"]
+priority = 0
+usage = "Use at session start when ready, then every 60 seconds after confirmed use."
+availability = "observed"
+strategy = "periodic"
+interval_ms = 60000
+run_on_start = true
+```
+
+`periodic` becomes due at the interval boundary after a confirmed application. Effect disappearance does not make it due early. Cooldown/readiness, pending/blocked state, and gameplay checks still apply. The default starts once at the first ready hunting opportunity when `action.<id>.has_confirmed_use = false`; unknown history does not imply never used. With `run_on_start = false`, the first use is due after `session.elapsed_ms` reaches the interval. Following uses need `action.<id>.elapsed_since_confirmed_ms`.
+
+The live controller will own monotonic session/timer history, set pending before input, and reset the timer only after confirmation. Due actions delayed by unavailable skills or a paused session wait for the next valid opportunity; missed periods do not generate catch-up input bursts. Actual scheduler/input execution is not implemented yet.
+
+For a different strategy that also responds to a missing effect:
 
 ```toml
 [[actions]]

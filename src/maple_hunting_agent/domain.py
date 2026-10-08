@@ -72,6 +72,9 @@ class ActionOption:
     elapsed_since_use_fact: str | None = None
     usage_strategy: str = ""
     effect_hint: str | None = None
+    timing_strategy: str = "available"
+    run_on_start: bool = False
+    has_confirmed_use_fact: str | None = None
 
 
 @dataclass(frozen=True)

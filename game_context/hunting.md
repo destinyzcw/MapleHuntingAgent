@@ -17,12 +17,13 @@ Key-down in the current direction may be selected again to renew its lease; the 
 ## Skills at the center
 
 - Use the ready configured action with the lowest numeric priority. The sample assigns 1=0, E=10, W=20, Q=30, D=40; equal-priority actions go to JEV together.
+- `buff_1` is due once at ready startup by default, then every 60 seconds after confirmed application. It is not offered on every ready frame. Periodic timers are controller-owned, not estimated from an image.
 - All activations use one profile list; there is no attack/buff distinction in selection. Natural-language usage accompanies each action in JEV inputs.
 - Greyed-out E/W icons in the bottom-right HUD mean unavailable. Skip them and consider the next attack; do not press all four together.
 - After activation, track pending effects and update readiness from fresh HUD evidence. Do not reuse an old ready flag or blindly assume a cooldown duration.
 - If no skill is ready, wait for a new frame. If minimap position or readiness is unknown, obtain more evidence rather than invent state.
 
-The priorities are configurable. The user confirms Q/D have cooldowns; neither is always ready. Exact durations, icons, costs, and animation constraints remain to be calibrated. The 1 action does not use a 30-minute interval. F6's separate usage strategy remains disabled until milestone 2 in [TODO.md](../docs/TODO.md).
+The priorities are configurable. The user confirms Q/D have cooldowns; neither is always ready. Exact durations, icons, costs, and animation constraints remain to be calibrated. The 1 action uses a 60-second periodic interval. F6's separate 30-minute/effect-missing strategy remains disabled until milestone 2 in [TODO.md](../docs/TODO.md).
 
 ## Rune activation — TODO
 
@@ -44,6 +45,9 @@ action.<stable_id>.ready: true / false / unknown
 action.<stable_id>.greyed_out: true / false / unknown
 action.<stable_id>.pending: true / false / unknown
 action.<stable_id>.effect_present: true / false / unknown, when configured
+action.<stable_id>.has_confirmed_use: true / false / unknown, for periodic actions
+action.<stable_id>.elapsed_since_confirmed_ms: controller-owned nonnegative elapsed time
+session.elapsed_ms: controller-owned session time, for delayed first periodic use
 minimap.center_relation: left / center / right / unknown
 ```
 

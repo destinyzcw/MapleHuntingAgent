@@ -162,12 +162,22 @@ def compile_character_profile(data: dict, *, max_key_hold_ms: int) -> ActionCata
                 "effect_active_fact": skill.get("effect_present_fact", f"action.{action_id}.effect_present"),
                 "elapsed_since_use_fact": f"action.{action_id}.elapsed_since_confirmed_ms",
             })
+        elif strategy == "periodic":
+            run_on_start = skill.get("run_on_start", True)
+            if type(run_on_start) is not bool:
+                raise ValueError(f"{action_id}.run_on_start must be boolean.")
+            refresh.update({
+                "refresh_interval_ms": _positive(skill["interval_ms"], f"{action_id}.interval_ms"),
+                "elapsed_since_use_fact": f"action.{action_id}.elapsed_since_confirmed_ms",
+                "has_confirmed_use_fact": f"action.{action_id}.has_confirmed_use",
+                "run_on_start": run_on_start,
+            })
         elif strategy != "available":
             raise ValueError(f"{action_id}: unsupported {category} strategy {strategy!r}.")
         rows.append(_action(
             action_id, f"{category.title()} {action_id}: binding {'+'.join(keys)}, priority {priority}. " + _text(skill.get("description", "Use when the configured readiness and strategy conditions are met."), f"{action_id}.description"), category,
             [_step("press" if len(keys) == 1 else "chord", keys, duration)], duration,
-            priority=priority, usage_strategy=usage, required_facts=facts, unavailable_facts=unavailable, **refresh,
+            priority=priority, timing_strategy=strategy, usage_strategy=usage, required_facts=facts, unavailable_facts=unavailable, **refresh,
         ))
     rows.extend([
         _action("wait", "Wait for new evidence or skill readiness without sending input.", "wait", [], 250),

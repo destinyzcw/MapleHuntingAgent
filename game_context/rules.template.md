@@ -20,7 +20,7 @@ The sample Q and D actions have cooldowns. E and W may be greyed out, which mean
 
 ## Default strategy
 
-For the CMS Kanna sample, 1 runs when ready before E → W → Q → D. Numeric profile priorities are authoritative. F6 is a distinct maintenance action disabled until milestone 2; its schedule must not be applied to 1. Other profiles may have different keys, priorities, action counts, no effect-maintenance actions, or no teleport.
+For the CMS Kanna sample, 1 is periodic every 60 seconds after a confirmed application, with one ready startup use enabled by default. When it is due and ready it takes priority over E → W → Q → D; pending or cooldown-blocked input is withheld. Effect disappearance does not shorten its period. Numeric profile priorities are authoritative. F6 is a distinct maintenance action disabled until milestone 2; its schedule must not be applied to 1. Other profiles may have different keys, priorities, action counts, no effect-maintenance actions, or no teleport.
 
 ## Rune requirement
 

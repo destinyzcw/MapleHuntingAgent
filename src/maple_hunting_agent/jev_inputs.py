@@ -139,7 +139,9 @@ def build_jev_input(
         confirmed.append({"id": learning.learning_id, "content": learning.content, "evidence_refs": learning.evidence_refs})
     supported_facts = {key: None for action in catalog.actions for key, _ in action.required_facts}
     supported_facts.update({key: None for action in catalog.actions for key in action.unavailable_facts})
-    supported_facts.update({key: None for action in catalog.actions for key in (action.effect_active_fact, action.elapsed_since_use_fact) if key})
+    supported_facts.update({key: None for action in catalog.actions for key in (action.effect_active_fact, action.elapsed_since_use_fact, action.has_confirmed_use_fact) if key})
+    if any(action.timing_strategy == "periodic" for action in catalog.actions):
+        supported_facts.setdefault("session.elapsed_ms", None)
     supported_facts.update({"minimap.player_x": None, "minimap.center_relation": None, "rune.required": None, "map.changed": None, "remote.frame_fresh": None})
     supported_facts.update(effective.facts)
     state_text = {
@@ -149,7 +151,7 @@ def build_jev_input(
         "session": session or {},
         "objective": asdict(plan),
         "observation": {"frame_id": observation.frame_id, "captured_at": observation.captured_at.isoformat(), "age_ms": round(age_ms, 3), "viewport": asdict(observation.viewport), "source_window_id": observation.source_window_id, "held_keys": observation.held_keys, "facts": supported_facts},
-        "candidate_details": [{"id": a.action_id, "description": a.description, "usage_strategy": a.usage_strategy, "category": a.category, "priority": a.priority, "keys": [list(step.keys) for step in a.keyboard_steps if step.keys], "max_duration_ms": a.max_duration_ms, "repeatable": a.repeatable, "success_criteria": a.success_criteria} for a in options],
+        "candidate_details": [{"id": a.action_id, "description": a.description, "usage_strategy": a.usage_strategy, "timing_strategy": a.timing_strategy, "interval_ms": a.refresh_interval_ms, "run_on_start": a.run_on_start, "category": a.category, "priority": a.priority, "keys": [list(step.keys) for step in a.keyboard_steps if step.keys], "max_duration_ms": a.max_duration_ms, "repeatable": a.repeatable, "success_criteria": a.success_criteria} for a in options],
         "recent_outcomes": [asdict(outcome) for outcome in recent_outcomes[-5:]],
         "confirmed_learnings": confirmed[-8:],
         "rules": rules,
@@ -215,7 +217,7 @@ def build_perception_input(
         for fact, expected in action.required_facts:
             if expected is True and fact != "control.gameplay_ready" and fact not in asked_ready:
                 name = f"ready_{len(asked_ready)}"
-                choice(name, f"Can configured action {action.action_id} ({keys}) be used now under this usage strategy: {action.usage_strategy or 'Use only when ready.'}? Inspect the bottom-right HUD and supplied context.", fact, {"ready": True, "unavailable": False, "unknown": None}, {"ready": "Ready under its usage strategy.", "unavailable": "Greyed out, on cooldown, resource-blocked, or otherwise unavailable.", "unknown": "Readiness cannot be established."})
+                choice(name, f"Is the visual cooldown/resource gate for action {action.action_id} ({keys}) ready? Usage context: {action.usage_strategy or 'Use only when ready.'} Inspect the bottom-right HUD. Ignore whether a periodic timer is due: that gate is computed separately in code.", fact, {"ready": True, "unavailable": False, "unknown": None}, {"ready": "Cooldown/resources permit activation.", "unavailable": "Greyed out, on cooldown, resource-blocked, or otherwise unavailable.", "unknown": "Readiness cannot be established."})
                 asked_ready.add(fact)
         for fact in action.unavailable_facts:
             if fact.endswith(".greyed_out") and fact not in asked_grey:

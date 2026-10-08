@@ -6,7 +6,7 @@ Character-specific bindings and usage rules live in [character profiles](../conf
 
 | Binding | Priority | Usage |
 |---|---:|---|
-| 1 | 0 | Use when ready; verify its distinct effect |
+| 1 | 0 | Periodic: once when ready at startup by default, then every 60 seconds after confirmed use |
 | E | 10 | Cooldown ready and not greyed out |
 | W | 20 | Cooldown ready and not greyed out |
 | Q | 30 | Cooldown ready |
@@ -14,6 +14,8 @@ Character-specific bindings and usage rules live in [character profiles](../conf
 | F6 | 5, disabled | Milestone 2: every 30 minutes or when its distinct effect disappears |
 
 These are all unified action entries. Lower priority runs first, and optional natural-language usage explains the conditions to JEV. F6 generates no active candidate in milestone 1. Other characters can omit any entry, use different keys/chords, or have a different number of actions.
+
+`buff_1` uses `strategy = "periodic"` and `interval_ms = 60000`. Due time does not bypass readiness or pending-input checks, and a missing effect does not trigger it before 60 seconds. Its timer resets after a confirmed application. Live scheduling/input remains unimplemented.
 
 ## Movement and teleport
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "profile_id": "cms_kanna",
-  "context_version": "cms-kanna-controls-v1:2f1700bd7ecc",
+  "context_version": "cms-kanna-controls-v1:298e1f2c9cda",
   "session": {
     "schema_version": 1,
     "status": "incomplete_user_session_context",
@@ -36,7 +36,7 @@
     "completion_criteria": [
       "Remain on the starting map."
     ],
-    "context_version": "cms-kanna-controls-v1:2f1700bd7ecc"
+    "context_version": "cms-kanna-controls-v1:298e1f2c9cda"
   },
   "observation": {
     "frame_id": "unknown-example-not-a-real-capture",
@@ -67,6 +67,9 @@
       "action.attack_d.pending": null,
       "action.buff_1.pending": null,
       "action.buff_1.effect_present": null,
+      "action.buff_1.elapsed_since_confirmed_ms": null,
+      "action.buff_1.has_confirmed_use": null,
+      "session.elapsed_ms": null,
       "minimap.player_x": null,
       "minimap.center_relation": null,
       "rune.required": null,
@@ -79,6 +82,9 @@
       "id": "wait",
       "description": "Wait for new evidence or skill readiness without sending input.",
       "usage_strategy": "",
+      "timing_strategy": "available",
+      "interval_ms": null,
+      "run_on_start": false,
       "category": "wait",
       "priority": 100,
       "keys": [],
@@ -92,6 +98,9 @@
       "id": "stop",
       "description": "Stop and release all executor-owned inputs.",
       "usage_strategy": "",
+      "timing_strategy": "available",
+      "interval_ms": null,
+      "run_on_start": false,
       "category": "stop",
       "priority": 100,
       "keys": [],
@@ -104,7 +113,7 @@
   ],
   "recent_outcomes": [],
   "confirmed_learnings": [],
-  "rules": "# MapleStory rules and hunting context\n\nContext version: generic-hunting-v1\n\nStatus: user-provided game context; timing and visual calibration incomplete\n\n## Objective\n\nMilestone 1 stays on the current map, returns to its horizontal center band, and uses configured character actions when their usage strategies permit. Map identity is not required. Do not choose map changes. The center band, keys, priorities, capabilities, and natural-language usage are supplied by the active profile/configuration; do not assume the sample character's bindings for another profile.\n\n## Character\n\nThe sample is China MapleStory (CMS), Kanna. Character identity comes from the active profile, which takes precedence over examples in documentation. There is no separate attack/buff classification in the profile; all activation actions share bindings, priorities, and usage strategies.\n\n## Visual state\n\nMapleStory is a 2D scrolling game. The top-left minimap indicates character position; use its player marker rather than the scrolling main view's center. The bottom-right action HUD shows keys/cooldowns. Effect icons are in the bottom row of the top-right buff list.\n\nThe sample Q and D actions have cooldowns. E and W may be greyed out, which means unavailable. Exact icon locations, names, resource costs, and cooldown durations are not yet calibrated. Unknown readiness is not available.\n\n## Default strategy\n\nFor the CMS Kanna sample, 1 runs when ready before E → W → Q → D. Numeric profile priorities are authoritative. F6 is a distinct maintenance action disabled until milestone 2; its schedule must not be applied to 1. Other profiles may have different keys, priorities, action counts, no effect-maintenance actions, or no teleport.\n\n## Rune requirement\n\nA dark-purple/block notice indicates a rune must be activated or no experience is gained, according to the user. Finding it in the minimap, approaching underneath, and activation remain in [TODO.md](../docs/TODO.md). Pause normal hunting for manual activation; do not infer that a chosen input successfully activated it.\n\n## Execution and evidence\n\nRecheck focus, frame freshness, pending actions, and current prerequisites before bounded input. Track expected effects independently from dispatch. Use fresh observations to resume hunting after a rune pause and to re-center after manual movement. Exact viewport geometry, input timing, and remote delay must be measured from the real session.\n",
+  "rules": "# MapleStory rules and hunting context\n\nContext version: generic-hunting-v1\n\nStatus: user-provided game context; timing and visual calibration incomplete\n\n## Objective\n\nMilestone 1 stays on the current map, returns to its horizontal center band, and uses configured character actions when their usage strategies permit. Map identity is not required. Do not choose map changes. The center band, keys, priorities, capabilities, and natural-language usage are supplied by the active profile/configuration; do not assume the sample character's bindings for another profile.\n\n## Character\n\nThe sample is China MapleStory (CMS), Kanna. Character identity comes from the active profile, which takes precedence over examples in documentation. There is no separate attack/buff classification in the profile; all activation actions share bindings, priorities, and usage strategies.\n\n## Visual state\n\nMapleStory is a 2D scrolling game. The top-left minimap indicates character position; use its player marker rather than the scrolling main view's center. The bottom-right action HUD shows keys/cooldowns. Effect icons are in the bottom row of the top-right buff list.\n\nThe sample Q and D actions have cooldowns. E and W may be greyed out, which means unavailable. Exact icon locations, names, resource costs, and cooldown durations are not yet calibrated. Unknown readiness is not available.\n\n## Default strategy\n\nFor the CMS Kanna sample, 1 is periodic every 60 seconds after a confirmed application, with one ready startup use enabled by default. When it is due and ready it takes priority over E → W → Q → D; pending or cooldown-blocked input is withheld. Effect disappearance does not shorten its period. Numeric profile priorities are authoritative. F6 is a distinct maintenance action disabled until milestone 2; its schedule must not be applied to 1. Other profiles may have different keys, priorities, action counts, no effect-maintenance actions, or no teleport.\n\n## Rune requirement\n\nA dark-purple/block notice indicates a rune must be activated or no experience is gained, according to the user. Finding it in the minimap, approaching underneath, and activation remain in [TODO.md](../docs/TODO.md). Pause normal hunting for manual activation; do not infer that a chosen input successfully activated it.\n\n## Execution and evidence\n\nRecheck focus, frame freshness, pending actions, and current prerequisites before bounded input. Track expected effects independently from dispatch. Use fresh observations to resume hunting after a rune pause and to re-center after manual movement. Exact viewport geometry, input timing, and remote delay must be measured from the real session.\n",
   "input_issues": [
     "remote_frame_freshness_unverified",
     "no_screenshot"

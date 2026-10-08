@@ -53,7 +53,14 @@ class ActionCatalog:
                     type(elapsed) in (int, float) and math.isfinite(elapsed)
                     and elapsed >= action.refresh_interval_ms
                 )
-                if active is not False and not expired:
+                if action.timing_strategy == "periodic":
+                    unused = observation.facts.get(action.has_confirmed_use_fact) is False
+                    initial = action.run_on_start and unused
+                    session_elapsed = observation.facts.get("session.elapsed_ms")
+                    first_interval = unused and not action.run_on_start and type(session_elapsed) in (int, float) and math.isfinite(session_elapsed) and session_elapsed >= action.refresh_interval_ms
+                    if not expired and not initial and not first_interval:
+                        continue
+                elif active is not False and not expired:
                     continue
             if not set(action.required_held_keys).issubset(held):
                 continue
@@ -137,12 +144,22 @@ def parse_actions(data: object, *, max_key_hold_ms: int) -> ActionCatalog:
         if direction is not None and direction not in ("left", "right", "up", "down"):
             raise ValueError(f"{action_id}: unsupported movement direction.")
         interval = row.get("refresh_interval_ms")
+        timing = row.get("timing_strategy", "interval_or_missing" if interval is not None else "available")
+        if timing not in ("available", "interval_or_missing", "periodic"):
+            raise ValueError(f"{action_id}: unsupported timing strategy.")
+        if timing != "available" and interval is None:
+            raise ValueError(f"{action_id}: timed strategies need an interval.")
         active_fact = row.get("effect_active_fact")
         elapsed_fact = row.get("elapsed_since_use_fact")
+        run_on_start = row.get("run_on_start", False)
+        has_confirmed = row.get("has_confirmed_use_fact")
+        if type(run_on_start) is not bool:
+            raise ValueError(f"{action_id}: run_on_start must be boolean.")
         if interval is not None:
             interval = _duration(interval, f"{action_id}.refresh_interval_ms", positive=True)
-            if category != "skill" or any(not isinstance(key, str) or not key for key in (active_fact, elapsed_fact)):
-                raise ValueError(f"{action_id}: refresh strategies need an action and effect/elapsed facts.")
+            required = (elapsed_fact, has_confirmed) if timing == "periodic" else (active_fact, elapsed_fact)
+            if category != "skill" or any(not isinstance(key, str) or not key for key in required):
+                raise ValueError(f"{action_id}: timed strategies need valid action timing facts.")
         usage = row.get("usage_strategy", "")
         hint = row.get("effect_hint")
         if not isinstance(usage, str) or (hint is not None and (not isinstance(hint, str) or not hint.strip())):
@@ -170,6 +187,9 @@ def parse_actions(data: object, *, max_key_hold_ms: int) -> ActionCatalog:
             elapsed_since_use_fact=elapsed_fact,
             usage_strategy=usage,
             effect_hint=hint,
+            timing_strategy=timing,
+            run_on_start=run_on_start,
+            has_confirmed_use_fact=has_confirmed,
         ))
     if len({a.action_id for a in result}) != len(result):
         raise ValueError("Action IDs must be unique.")

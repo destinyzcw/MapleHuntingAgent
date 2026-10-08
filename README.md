@@ -32,7 +32,7 @@ Version `0.1.0` contains the repository scaffold, configurable profiles, and off
 
 **Validation performed:** standard-library syntax/configuration checks, profile/remapping/priority/optional-capability cases, JEV input preparation and missing/stale-frame paths, and documentation-link/whitespace checks. These checks ran on the authoring workstation. No project dependencies or model weights were installed here. Metal inference, screenshots, UU远程 inputs, scheduling, memory persistence, and gameplay have not been tested.
 
-The 11 dependency-free regression checks can be repeated with `python -m unittest discover -s tests -v`. They exercise configuration and input preparation only.
+The 12 dependency-free regression checks can be repeated with `python -m unittest discover -s tests -v`. They exercise configuration and input preparation only, including periodic timing boundaries.
 
 **Next milestone:** obtain real session context and screenshots, establish the UU远程 viewport, then implement recorded-frame replay and offline decisions. The public screenshot above cannot substitute for those inputs. Start with [AGENTS.md](AGENTS.md), [game context](game_context/README.md), and [development milestones](docs/development.md).
 
@@ -137,4 +137,4 @@ maple-agent inputs --config config/local.example.toml \
 
 Use `--stage perception` for visual questions. The example has no real screenshot and produces a missing-input fallback. [JEV input inventory](docs/jev-inputs.md) lists the known CMS Kanna context and the remaining screenshot/calibration inputs.
 
-**Milestone 1 scope:** [stay centered and hunt on one map](game_context/hunting.md). The sample is CMS Kanna; map name is optional. Position comes from the top-left minimap and readiness from the bottom-right HUD. Its default priorities select 1 when ready, then **E → W → Q → D**; Q/D have cooldowns, and greyed-out E/W are unavailable. All five are unified actions with usage strategies. F6 stays disabled until milestone 2 in [TODO.md](docs/TODO.md). Rune activation is also deferred; detection pauses hunting for manual activation until that workflow is tested.
+**Milestone 1 scope:** [stay centered and hunt on one map](game_context/hunting.md). The sample is CMS Kanna; map name is optional. Position comes from the top-left minimap and readiness from the bottom-right HUD. `buff_1` is periodic every **60 seconds**, starting once when ready by default, then attack priority is **E → W → Q → D**. Q/D have cooldowns, and greyed-out E/W are unavailable. All five are unified actions with usage strategies; periodic due state still respects readiness and pending-input guards. F6 stays disabled until milestone 2 in [TODO.md](docs/TODO.md). Rune activation is also deferred; detection pauses hunting for manual activation until that workflow is tested.

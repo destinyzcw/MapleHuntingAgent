@@ -14,7 +14,7 @@
 | Teleport | S plus a direction in the sample; optional for other characters |
 | Attacks | E → W → Q → D in the sample; configurable priority numbers and count |
 | Readiness | Q/D have cooldowns; E/W greying means unavailable; no invented durations |
-| Buffs | 1 is active for milestone 1; distinct F6 is disabled until milestone 2 |
+| Periodic action | 1 is used every 60 seconds after confirmed use, with ready startup use enabled; distinct F6 is disabled until milestone 2 |
 | UI | Top-left minimap; bottom-right skill keys/cooldowns; bottom row of top-right buff list |
 | Rune | Dark-purple/block notice; pause for manual activation while solving is TODO |
 | Timing | 1000-ms observation target, shorter authorized repeats; actual latency unmeasured |
@@ -43,6 +43,8 @@ Each visual question includes an `unknown` option. Metadata maps choices to fact
 ```
 
 These questions are prepared, not executed. The future adapter must map returned `answers.<name>.value` through `metadata.fact_mappings`, validate probabilities, and retain unknown when the answer is uncertain or conflicts with evidence. Capture freshness, held keys, pending actions, and elapsed timers come from code, not image inference. Question probabilities are not guaranteed to be calibrated for CMS.
+
+For periodic actions, visual questions establish only cooldown/resource readiness. Due time is computed separately from the configured interval, confirmed-use history, and monotonic elapsed time. These are separate gates; no image-derived timer is fabricated.
 
 The minimap question produces `minimap.center_relation = left/center/right/unknown`. This avoids inventing an exact X coordinate from a categorical answer. The policy also accepts measured `minimap.player_x`; conflicting position evidence yields unknown.
 

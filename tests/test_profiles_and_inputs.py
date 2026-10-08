@@ -38,6 +38,7 @@ class ProfileAndInputChecks(unittest.TestCase):
 
     def test_default_priorities_grey_override_and_pending(self):
         ready = {f"action.{name}.ready": True for name in ("attack_e", "attack_w", "attack_q", "attack_d", "buff_1")}
+        ready["action.buff_1.has_confirmed_use"] = False
         self.assertEqual(self.choices(self.observation(ready))[0].action_id, "buff_1")
         ready["action.buff_1.pending"] = True
         self.assertEqual(self.choices(self.observation(ready))[0].action_id, "attack_e")
@@ -56,7 +57,7 @@ class ProfileAndInputChecks(unittest.TestCase):
             elif action["id"] == "buff_1":
                 action["priority"] = 100
         catalog = compile_character_profile(changed, max_key_hold_ms=500)
-        selected = self.choices(self.observation({"action.attack_q.ready": True, "action.buff_1.ready": True}), catalog)[0]
+        selected = self.choices(self.observation({"action.attack_q.ready": True, "action.buff_1.ready": True, "action.buff_1.has_confirmed_use": False}), catalog)[0]
         self.assertEqual(selected.action_id, "attack_q")
         self.assertEqual(selected.keyboard_steps[0].keys, ("r",))
         self.assertNotEqual(catalog.context_version, self.catalog.context_version)
@@ -111,12 +112,32 @@ class ProfileAndInputChecks(unittest.TestCase):
         pending = self.observation({"action.buff_f6.effect_present": False, "action.buff_f6.pending": True})
         self.assertNotIn("buff_f6", {a.action_id for a in self.choices(pending, catalog)})
 
+    def test_buff_1_periodic_boundary_start_and_pending(self):
+        ready = {"action.buff_1.ready": True, "action.attack_e.ready": True}
+        self.assertEqual(self.choices(self.observation(ready))[0].action_id, "attack_e")
+        self.assertEqual(self.choices(self.observation({**ready, "action.buff_1.has_confirmed_use": False}))[0].action_id, "buff_1")
+        for elapsed, expected in ((0, "attack_e"), (59999, "attack_e"), (60000, "buff_1"), (60001, "buff_1")):
+            facts = {**ready, "action.buff_1.has_confirmed_use": True, "action.buff_1.elapsed_since_confirmed_ms": elapsed, "action.buff_1.effect_present": False}
+            self.assertEqual(self.choices(self.observation(facts))[0].action_id, expected)
+        due = {**ready, "action.buff_1.elapsed_since_confirmed_ms": 60000}
+        self.assertEqual(self.choices(self.observation({**due, "action.buff_1.pending": True}))[0].action_id, "attack_e")
+        self.assertEqual(self.choices(self.observation({**due, "action.buff_1.ready": False}))[0].action_id, "attack_e")
+        data = deepcopy(self.data)
+        next(a for a in data["actions"] if a["id"] == "buff_1")["run_on_start"] = False
+        catalog = compile_character_profile(data, max_key_hold_ms=500)
+        self.assertEqual(self.choices(self.observation({**ready, "action.buff_1.has_confirmed_use": False}), catalog)[0].action_id, "attack_e")
+        initial = {**ready, "action.buff_1.has_confirmed_use": False, "session.elapsed_ms": 59999}
+        self.assertEqual(self.choices(self.observation(initial), catalog)[0].action_id, "attack_e")
+        initial["session.elapsed_ms"] = 60000
+        self.assertEqual(self.choices(self.observation(initial), catalog)[0].action_id, "buff_1")
+
     def test_invalid_profiles_fail(self):
         for mutate in (
             lambda d: d["actions"][0].update(priority=True),
             lambda d: d["actions"][0].update(press_ms=501),
             lambda d: d["actions"].append(deepcopy(d["actions"][0])),
             lambda d: d.update(buffs=[]),
+            lambda d: next(a for a in d["actions"] if a["id"] == "buff_1").update(interval_ms=0),
         ):
             data = deepcopy(self.data)
             mutate(data)

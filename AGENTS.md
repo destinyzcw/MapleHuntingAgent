@@ -32,6 +32,7 @@ For dependency-free checks on this authoring workstation, compile source with Py
 - Do not invent game mechanics, key bindings, or successful validation evidence.
 - Milestone 1 is single-map centered hunting, with no map changes. Use the top-left minimap for position and bottom-right HUD for readiness. Read `game_context/hunting.md` before changing candidate rules.
 - The CMS Kanna sample prioritizes ready actions as 1, then E → W → Q → D. Q/D have cooldowns, greyed-out E/W are unavailable. All entries share the same action schema; their game purposes do not require separate classification.
+- `buff_1` is periodic every 60 seconds after confirmed use; startup activation is configurable and enabled by default. It must not run on every ready frame or early when its effect disappears. Due time still respects cooldown/pending checks. Timer state belongs to code, not visual inference.
 - The default profile implements that order via priority numbers. Other profiles may remap keys, omit teleport, or have any number of unified actions. Do not hardcode sample keys/priorities into the policy or JEV prompts.
 - Use `jev_inputs.py` for state/questions/candidates and explicit unknowns. Visual fact extraction and action selection are separate prepared stages; model execution remains unimplemented. Read `docs/jev-inputs.md` for known inputs and calibration gaps.
 - Rune activation is deferred in `docs/TODO.md`. A detected requirement pauses routine hunting for manual activation; do not implement or assume the interaction/puzzle without a session test.

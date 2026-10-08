@@ -10,7 +10,7 @@ Deferred by the user; do not offer or execute this action in milestone 1.
 - [ ] Track pending activation and remote-frame delay to avoid duplicate presses.
 - [ ] Test F6 forwarding through UU远程 and define independent activation evidence.
 
-The 1 buff is already part of milestone 1. It has a different purpose and uses its own availability rule; do not substitute F6 or its 30-minute interval for 1.
+The 1 action is already part of milestone 1 and is periodic every 60 seconds after confirmed use. It has a different purpose and timing strategy; do not substitute F6 or its 30-minute/effect-missing rule for 1.
 
 ## Rune activation
 

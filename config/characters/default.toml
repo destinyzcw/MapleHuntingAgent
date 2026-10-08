@@ -58,12 +58,14 @@ description = "Use D when its cooldown is ready; do not treat D as always availa
 id = "buff_1"
 effect_present_fact = "action.buff_1.effect_present"
 effect_hint = "Find the specific 1-buff indicator in the bottom row of the top-right buff list."
-usage = "Use whenever ready before routine attacks; confirm its effect using the correct icon."
+usage = "Use once at session start when ready, then every 60 seconds after a confirmed application. Wait if unavailable or pending."
 keys = ["1"]
 priority = 0
 availability = "observed"
-strategy = "available"
-description = "Use the 1 buff whenever ready before the default attacks."
+strategy = "periodic"
+interval_ms = 60000
+run_on_start = true
+description = "Apply the 1 buff when its 60-second periodic timer is due and cooldown is ready."
 
 # F6 is a different buff deferred to milestone 2. Disabled entries generate no action.
 [[actions]]
