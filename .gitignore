@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.DS_Store
+.env
+config/local.toml
+data/captures/*
+!data/captures/.gitkeep
+data/runs/*
+!data/runs/.gitkeep
+data/memory/*
+!data/memory/.gitkeep
+models/

@@ -1,0 +1,36 @@
+# Copy to local.toml for machine-specific settings; local.toml is ignored by Git.
+# Relative paths resolve against the directory containing pyproject.toml.
+
+[runtime]
+mode = "observe"                  # scaffold currently supports observe only
+capture_dir = "data/captures"
+run_dir = "data/runs"
+
+[remote]
+app_name = "UU远程"
+window_title = ""                  # identify after inspecting the real Mac session
+require_focused_window = true
+# Viewport and Retina coordinate mapping will be recorded during capture setup.
+
+[decision]
+backend = "jev_mlx"
+model_id = "nativ-community/JEV-27B-VL-MLX-8bit"
+runtime_revision = "24b24bb471dd36039fa5933f063f7dbc30a68c04"
+max_options = 16                   # first implementation uses trained choice slots
+
+[context]
+rules_file = "game_context/rules.template.md"
+actions_file = "game_context/actions.example.json"
+
+[scheduling]
+observation_interval_ms = 1000      # regular screenshot + decision cadence
+repeat_interval_ms = 250           # repeat a previously approved action between frames
+max_repeat_observation_age_ms = 1500
+max_repeat_span_ms = 2000          # reapproval required after this bounded repeat window
+max_key_hold_ms = 500              # per-step bound; tune after remote input measurements
+
+[memory]
+enabled = true
+backend = "sqlite"
+database = "data/memory/learnings.sqlite3"
+# Scaffold settings only: no database is created until the memory adapter exists.

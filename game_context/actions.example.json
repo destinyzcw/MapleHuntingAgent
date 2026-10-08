@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "status": "schema_example_only",
+  "actions": [
+    {
+      "id": "wait",
+      "description": "Collect a fresh observation without sending game input.",
+      "preconditions": ["The observation source is available."],
+      "execution": {"kind": "none", "duration_ms": 250},
+      "keyboard_steps": [],
+      "repeatable": false,
+      "success_criteria": ["A newer frame arrives before the observation deadline."]
+    },
+    {
+      "id": "stop",
+      "description": "End the session and release any inputs owned by the executor.",
+      "preconditions": [],
+      "execution": {"kind": "stop", "duration_ms": 0},
+      "keyboard_steps": [],
+      "repeatable": false,
+      "success_criteria": ["The loop has stopped and no executor-owned input remains held."]
+    }
+  ]
+}

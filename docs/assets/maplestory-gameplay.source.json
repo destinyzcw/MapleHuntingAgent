@@ -1,0 +1,11 @@
+{
+  "asset": "maplestory-gameplay.jpg",
+  "description": "MapleStory promotional gameplay screenshot showing characters and NPCs in a colorful side-scrolling town.",
+  "source_page": "https://store.steampowered.com/app/216150/MapleStory/",
+  "source_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/216150/ss_8ca529a3b9117c16d73e0822665cfde7a69323b1.1920x1080.jpg?t=1791417713",
+  "source_screenshot_id": 0,
+  "retrieved_at_utc": "2026-10-08T07:57:20.136367+00:00",
+  "sha256": "e5aa39605363c7c77d4827ccbc248c9f3064e9c14becae28d34bd380f88a5a3d",
+  "rights": "MapleStory image rights remain with their respective owners; no open-source image license is asserted.",
+  "usage": "README illustration only; not a user-session capture, training sample, or calibration fixture."
+}
